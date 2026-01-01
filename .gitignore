@@ -1,0 +1,23 @@
+# Ignore all node_modules everywhere
+node_modules/
+
+# Env files
+.env
+.env.local
+.env.production
+.env.development
+
+# Build outputs
+dist/
+coverage/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
