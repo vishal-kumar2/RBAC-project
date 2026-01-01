@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -10,37 +9,59 @@ dotenv.config();
 
 const app = express();
 
-/* ================= MIDDLEWARE ================= */
-import cors from "cors";
+/* =====================================================
+   CORS CONFIG (MUST BE BEFORE ROUTES)
+===================================================== */
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://rbac-project-psi.vercel.app",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://rbac-project-psi.vercel.app",
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (Postman, curl, mobile apps)
+    if (!origin) return callback(null, true);
 
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
+// ✅ Apply SAME CORS config everywhere
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // 🔥 REQUIRED for preflight
 
-app.use(express.json()); // Parse JSON body
+/* =====================================================
+   BODY PARSER
+===================================================== */
+app.use(express.json());
 
-/* ================= ROUTES ================= */
+/* =====================================================
+   ROUTES
+===================================================== */
 app.use("/api/users", userRoutes);
 
-/* ================= ROOT ================= */
+/* =====================================================
+   ROOT ROUTE
+===================================================== */
 app.get("/", (req, res) => {
   res.send("RBAC Backend API Running...");
 });
 
-/* ================= DATABASE ================= */
+/* =====================================================
+   DATABASE
+===================================================== */
 connectDB();
 
-/* ================= SERVER ================= */
+/* =====================================================
+   SERVER
+===================================================== */
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
