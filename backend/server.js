@@ -11,14 +11,19 @@ dotenv.config();
 const app = express();
 
 /* ================= MIDDLEWARE ================= */
+import cors from "cors";
+
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://rbac-project-psi.vercel.app/"
+      "https://rbac-project-psi.vercel.app",
     ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 
 
 
