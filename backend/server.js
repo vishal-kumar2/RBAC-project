@@ -11,7 +11,15 @@ dotenv.config();
 const app = express();
 
 /* ================= MIDDLEWARE ================= */
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://rbac-project-psi.vercel.app/"
+    ],
+  })
+);
+
 
 
 app.use(express.json()); // Parse JSON body
